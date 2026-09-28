@@ -1,49 +1,32 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Index,
-  Check,
-  PrimaryColumn,
-} from 'typeorm';
+import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne } from 'typeorm';
+import { Company } from '../../companies/entities/company.entity.js';
 
-// @Index('idx_users_username', ['username'])
-// @Index('idx_users_is_deleted', ['isDeleted'])
-// @Index('idx_users_created_at', ['createdAt'])
-// @Index('idx_users_updated_at', ['updatedAt'])
-// @Check('chk_users_email_not_empty', `"email" <> ''`)
-// @Check('chk_users_username_not_empty', `"username" <> ''`)
-// @Check('chk_users_password_hash_not_empty', `"password_hash" <> ''`)
-
-@Entity({
-  schema: 'public',
-  name: 'users',
-})
+@Entity({ schema: 'public', name: 'users' })
 export class User {
-  // @PrimaryGeneratedColumn('uuid')
-  @PrimaryColumn({type: "uuid"})
+  @PrimaryColumn({ type: "uuid" })
   id: string;
 
-  @Column({
-    type: 'varchar',
-    length: 64,
-  })
+  @Column({ type: 'varchar', length: 64 })
   username: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  email: string;
 
-  @Column({
-    type: 'boolean',
-    default: false,
-  })
+  @Column({ type: 'text', nullable: true })
+  avatar_url: string;
+
+  @Column({ type: 'boolean', default: false })
   is_superuser: boolean;
 
-  @Column({
-    type: 'boolean',
-    default: false,
-  })
+  @Column({ type: 'boolean', default: false })
   is_deleted: boolean;
 
-  
+  @CreateDateColumn({ type: 'timestamptz' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updated_at: Date;
+
+  @OneToOne(() => Company, (company) => company.user)
+  company: Company;
 }
